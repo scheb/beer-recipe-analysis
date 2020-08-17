@@ -70,6 +70,7 @@ def parse_hops_data(data: object) -> list:
 
 
 def parse_malts_data(data: object) -> list:
+    total_malt_amount = 0
     malts = []
     i: int = 1
     while "Malz%d" % i in data:
@@ -91,12 +92,17 @@ def parse_malts_data(data: object) -> list:
             amount = float(data["Malz%d_Menge" % i])
             if "Malz%d_Einheit" % i in data and data["Malz%d_Einheit" % i] == 'kg':
                 amount *= 1000
+            total_malt_amount += amount
 
         malts.append({
             'kind': kind,
             'amount': amount,
         })
         i += 1
+
+    for malt in malts:
+        malt['amount_percent'] = malt['amount'] / total_malt_amount * 100
+
     return malts
 
 
