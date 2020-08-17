@@ -1,5 +1,6 @@
 import glob
 import json
+import re
 
 
 class IgnoreRecipeError(Exception):
@@ -18,6 +19,7 @@ def parse_source_json_file(file: str) -> object:
             raise IgnoreRecipeError("Ignore non-infusion recipe")
 
         parsed_data['name'] = json_data['Name']
+        parsed_data['style'] = json_data['Sorte']
 
         parsed_data['efficiency'] = float(json_data['Sudhausausbeute'])
         parsed_data['original_extract'] = float(json_data['Stammwuerze'])
@@ -40,7 +42,7 @@ def parse_hops_data(data: object) -> list:
     hops = []
     i: int = 1
     while "Hopfen_%d_Sorte" % i in data:
-        kind = data["Hopfen_%d_Sorte" % i]
+        kind = data["Hopfen_%d_Sorte" % i].strip().lower()
         alpha = None
         amount = None
         boiling_time = None
@@ -71,8 +73,19 @@ def parse_malts_data(data: object) -> list:
     malts = []
     i: int = 1
     while "Malz%d" % i in data:
-        kind = data["Malz%d" % i]
+        kind = data["Malz%d" % i].lower()
         amount = None
+
+        # Clean data
+        kind = kind.replace("pilsener", "pilsner")
+        kind = kind.replace("münchener", "münchner")
+        kind = kind.replace("®", "")
+        kind = re.sub("\\bmalz\\b", " ", kind)
+        kind = re.sub("malz\\b", " ", kind)
+        kind = re.sub("\\bmalz", " ", kind)
+        kind = re.sub("cara\\s*([a-z])", lambda match: 'cara{}'.format(match.group(1).lower()), kind)
+        kind = re.sub("\\s+", " ", kind)
+        kind = kind.strip()
 
         if "Malz%d_Menge" % i in data:
             amount = float(data["Malz%d_Menge" % i])
