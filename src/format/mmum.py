@@ -68,6 +68,9 @@ def parse_hops_data(data: object) -> list:
         kind = re.sub("\\s+", " ", kind)
         kind = kind.strip()
 
+        if kind == "0.0":
+            raise IgnoreRecipeError("Not a valid hop kind")
+
         if "Hopfen_%d_alpha" % i in data:
             alpha = float(data["Hopfen_%d_alpha" % i])
         if "Hopfen_%d_Menge" % i in data:
