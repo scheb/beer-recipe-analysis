@@ -39,6 +39,7 @@ def parse_source_json_file(file: str) -> object:
 
 
 def parse_hops_data(data: object) -> list:
+    total_amount = 0
     hops = []
     i: int = 1
     while "Hopfen_%d_Sorte" % i in data:
@@ -47,10 +48,17 @@ def parse_hops_data(data: object) -> list:
         amount = None
         boiling_time = None
 
+        # Clean data
+        kind = kind.replace("®", "")
+        kind = kind.replace("huell", "hüll")
+        kind = re.sub("\\s+", " ", kind)
+        kind = kind.strip()
+
         if "Hopfen_%d_alpha" % i in data:
             alpha = float(data["Hopfen_%d_alpha" % i])
         if "Hopfen_%d_Menge" % i in data:
             amount = float(data["Hopfen_%d_Menge" % i])
+            total_amount += amount
         if "Hopfen_%d_Kochzeit" % i in data:
             boiling_time = data["Hopfen_%d_Kochzeit" % i]
             if boiling_time == "Whirlpool":
@@ -66,11 +74,14 @@ def parse_hops_data(data: object) -> list:
         })
         i += 1
 
+    for hop in hops:
+        hop['amount_percent'] = hop['amount'] / total_amount * 100
+
     return hops
 
 
 def parse_malts_data(data: object) -> list:
-    total_malt_amount = 0
+    total_amount = 0
     malts = []
     i: int = 1
     while "Malz%d" % i in data:
@@ -81,7 +92,6 @@ def parse_malts_data(data: object) -> list:
         kind = kind.replace("pilsener", "pilsner")
         kind = kind.replace("münchener", "münchner")
         kind = kind.replace("®", "")
-        kind = re.sub("\\bmalz\\b", " ", kind)
         kind = re.sub("malz\\b", " ", kind)
         kind = re.sub("\\bmalz", " ", kind)
         kind = re.sub("cara\\s*([a-z])", lambda match: 'cara{}'.format(match.group(1).lower()), kind)
@@ -92,7 +102,7 @@ def parse_malts_data(data: object) -> list:
             amount = float(data["Malz%d_Menge" % i])
             if "Malz%d_Einheit" % i in data and data["Malz%d_Einheit" % i] == 'kg':
                 amount *= 1000
-            total_malt_amount += amount
+            total_amount += amount
 
         malts.append({
             'kind': kind,
@@ -101,7 +111,7 @@ def parse_malts_data(data: object) -> list:
         i += 1
 
     for malt in malts:
-        malt['amount_percent'] = malt['amount'] / total_malt_amount * 100
+        malt['amount_percent'] = malt['amount'] / total_amount * 100
 
     return malts
 
