@@ -16,6 +16,8 @@ def parse_source_json_file(file: str) -> object:
     parsed_data = {}
     with open(file) as fileHandle:
         json_data = json.loads(fileHandle.read())
+        if json_data['Name'] == '':
+            raise IgnoreRecipeError("Ignore empty recipe")
         if json_data['Maischform'] != 'infusion':
             raise IgnoreRecipeError("Ignore non-infusion recipe")
 
