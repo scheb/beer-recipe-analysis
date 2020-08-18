@@ -1,3 +1,4 @@
 /.ipynb_checkpoints
+/data/processed/*.json
 /data/raw/*/*.json
 /data/*.json

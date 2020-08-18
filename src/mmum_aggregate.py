@@ -21,7 +21,7 @@ def aggregate_data():
         except IgnoreRecipeError:
             pass
 
-    with open('../data/mmum.json', 'w') as outFile:
+    with open('../data/processed/mmum.json', 'w') as outFile:
         json.dump(aggregated_data, outFile, indent=4)
         outFile.close()
 
