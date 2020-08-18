@@ -9,7 +9,7 @@ class IgnoreRecipeError(Exception):
 
 
 def is_infusion(data: object) -> bool:
-    return data.get('Maischform', '') == 'infusion' or data.get('Infusion_Hauptguss', '') == ''
+    return data.get('Maischform', '') == 'infusion' or data.get('Infusion_Hauptguss', '') != ''
 
 
 def parse_source_json_file(file: str) -> object:
@@ -23,7 +23,7 @@ def parse_source_json_file(file: str) -> object:
         if json_data['Name'] == '':
             raise IgnoreRecipeError("Ignore empty recipe")
 
-        if is_infusion(json_data):
+        if not is_infusion(json_data):
             raise IgnoreRecipeError("Ignore non-infusion recipe")
 
         parsed_data['name'] = json_data['Name']
