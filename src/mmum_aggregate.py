@@ -9,7 +9,7 @@ class IgnoreRecipeError(Exception):
 
 
 def get_source_file_list() -> list:
-    return glob.glob("../raw_data/mmum/*.json")
+    return glob.glob("../data/raw/mmum/*.json")
 
 
 def parse_source_json_file(file: str) -> object:
