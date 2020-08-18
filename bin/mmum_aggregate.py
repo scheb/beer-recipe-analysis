@@ -1,6 +1,7 @@
 import glob
 import json
 import re
+from tqdm import tqdm
 
 
 class IgnoreRecipeError(Exception):
@@ -117,9 +118,10 @@ def parse_malts_data(data: object) -> list:
 
 
 def aggregate_data():
+    print("Aggregate raw data...")
     aggregated_data = []
     files = get_source_file_list()
-    for file in files:
+    for file in tqdm(files):
         try:
             parsed_data = parse_source_json_file(file)
             aggregated_data.append(parsed_data)
