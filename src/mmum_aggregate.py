@@ -12,9 +12,12 @@ def aggregate_data():
     print("Aggregate raw data...")
     aggregated_data = []
     files = get_source_file_list()
+    i = 0
     for file in tqdm(files):
+        i += 1
         try:
             parsed_data = parse_source_json_file(file)
+            parsed_data['uid'] = "mmum:"+str(i)
             aggregated_data.append(parsed_data)
         except (ValueError, KeyError) as err:
             print("Cannot parse file %s because of %s: %s" % (file, type(err), err))
