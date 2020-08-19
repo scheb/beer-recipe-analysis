@@ -29,6 +29,20 @@ Usage
 
 3) Run the notebooks from the `ipynb` folder
 
+Results
+-------
+
+Run the Jupyter notebooks to see the results. The notebooks have a variable to generate results for a different beer
+style. Per default it's analyzing the `pale ale` beer style.
+
+### [Malts used](notebooks/malts.ipynb)
+
+![alt text](img/malts.png "Malts used")
+
+### [Hops used](notebooks/hops.ipynb)
+
+![alt text](img/hops.png "Hops used")
+
 License
 -------
 
