@@ -1,10 +1,12 @@
 import glob
 import json
 from tqdm import tqdm
+from os import path
 
 
 def get_source_file_list() -> list:
-    return glob.glob("../data/processed/*.json")
+    data_path = path.join(path.dirname(path.abspath(__file__)), '../data/processed/*.json')
+    return glob.glob(data_path)
 
 
 def aggregate_data():
@@ -16,9 +18,10 @@ def aggregate_data():
         with open(file) as infile:
             aggregated_data += json.load(infile)
 
-    with open('../data/recipes.json', 'w') as outFile:
-        json.dump(aggregated_data, outFile, indent=4)
-        outFile.close()
+    out_file_path = path.join(path.dirname(path.abspath(__file__)), '../data/recipes.json')
+    with open(out_file_path, 'w+') as out_file:
+        json.dump(aggregated_data, out_file, indent=4)
+        out_file.close()
 
 
 aggregate_data()

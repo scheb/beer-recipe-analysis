@@ -14,14 +14,15 @@ def download_data():
 
     print("Found {} ids".format(len(ids)))
     for i in tqdm(ids):
-        if not path.exists('../data/raw/mb/' + str(i) + '.json'):
+        json_file_path = path.join(path.dirname(path.abspath(__file__)), '../data/raw/mb/' + str(i) + '.json')
+        if not path.exists(json_file_path):
             page = requests.get("https://braureka.de/rezept-export/?format=mmum&id=" + str(i))
             if page.status_code == 200:
                 json_search = re.search('export content">(.*)</textarea>', page.text, re.IGNORECASE | re.DOTALL)
                 if json_search:
-                    with open('../data/raw/mb/' + str(i) + '.json', 'w') as jsonFile:
-                        jsonFile.write(json_search.group(1).strip())
-                        jsonFile.close()
+                    with open(json_file_path, 'w+') as json_file:
+                        json_file.write(json_search.group(1).strip())
+                        json_file.close()
 
 
 download_data()

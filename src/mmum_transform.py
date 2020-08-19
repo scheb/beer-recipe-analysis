@@ -1,11 +1,13 @@
 import glob
 import json
+from os import path
 from tqdm import tqdm
 from format.mmum import parse_source_json_file, IgnoreRecipeError
 
 
 def get_source_file_list() -> list:
-    return glob.glob("../data/raw/mmum/*.json")
+    data_path = path.join(path.dirname(path.abspath(__file__)), "../data/raw/mmum/*.json")
+    return glob.glob(data_path)
 
 
 def aggregate_data():
@@ -24,9 +26,11 @@ def aggregate_data():
         except IgnoreRecipeError:
             pass
 
-    with open('../data/processed/mmum.json', 'w') as outFile:
-        json.dump(aggregated_data, outFile, indent=4)
-        outFile.close()
+    out_file_path = path.join(path.dirname(path.abspath(__file__)), '../data/processed/mmum.json')
+    print(out_file_path)
+    with open(out_file_path, 'w+') as out_file:
+        json.dump(aggregated_data, out_file, indent=4)
+        out_file.close()
 
 
 aggregate_data()

@@ -13,12 +13,13 @@ def download_data():
         max_id = int(id_search.group(1))
         print("Max id is " + str(max_id))
         for i in tqdm(range(1, max_id + 1)):
-            if not path.exists('../data/raw/mmum/' + str(i) + '.json'):
+            json_file_path = path.join(path.dirname(path.abspath(__file__)), '../data/raw/mmum/' + str(i) + '.json')
+            if not path.exists(json_file_path):
                 page = requests.get("https://www.maischemalzundmehr.de/export.php?id=" + str(i))
                 if page.status_code == 200:
-                    with open('../data/raw/mmum/' + str(i) + '.json', 'w') as jsonFile:
-                        jsonFile.write(page.text)
-                        jsonFile.close()
+                    with open(json_file_path, 'w+') as json_file:
+                        json_file.write(page.text)
+                        json_file.close()
 
 
 download_data()
