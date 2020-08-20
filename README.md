@@ -27,7 +27,7 @@ Usage
 
 2) Start Jupyter Labs in the project root
 
-3) Run the notebooks from the `ipynb` folder
+3) Run the notebooks from the `notebooks` folder
 
 Results
 -------
